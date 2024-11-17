@@ -26,19 +26,19 @@ build-backend = "setuptools.build_meta" # If not defined, then legacy behavior c
 # There are some restrictions on what makes a valid project name
 # specification here:
 # https://packaging.python.org/specifications/core-metadata/#name
-name = "sampleproject" # REQUIRED, is the only field that cannot be marked as dynamic.
+name = "load_spice" # REQUIRED, is the only field that cannot be marked as dynamic.
 
 # Versions should comply with PEP 440:
 # https://www.python.org/dev/peps/pep-0440/
 #
 # For a discussion on single-sourcing the version, see
 # https://packaging.python.org/guides/single-sourcing-package-version/
-version = "4.0.0" # REQUIRED, although can be dynamic
+version = "0.0.1" # REQUIRED, although can be dynamic
 
 # This is a one-line description or tagline of what your project does. This
 # corresponds to the "Summary" metadata field:
 # https://packaging.python.org/specifications/core-metadata/#summary
-description = "A sample Python project"
+description = "Load ngspice raw files"
 
 # This is an optional longer description of your project that represents
 # the body of text which users will see when they visit PyPI.
@@ -72,13 +72,13 @@ keywords = ["sample", "setuptools", "development"]
 # This should be your name or the name of the organization who originally
 # authored the project, and a valid email address corresponding to the name
 # listed.
-authors = [{ name = "A. Random Developer", email = "author@example.com" }]
+authors = [{ name = "J. R. Sharp", email = "jamesrosssharp@gmail.com" }]
 
 # This should be your name or the names of the organization who currently
 # maintains the project, and a valid email address corresponding to the name
 # listed.
 maintainers = [
-  { name = "A. Great Maintainer", email = "maintainer@example.com" },
+  { name = "J. R. Sharp", email = "jamesrosssharp@gmail.com" },
 ]
 
 # Classifiers help users find your project by categorizing it.
@@ -116,7 +116,7 @@ classifiers = [
 #
 # For an analysis of this field vs pip's requirements files see:
 # https://packaging.python.org/discussions/install-requires-vs-requirements/
-dependencies = ["peppercorn"]
+dependencies = ["numpy"]
 
 # List additional groups of dependencies here (e.g. development
 # dependencies). Users will be able to install these using the "extras"
@@ -142,11 +142,11 @@ test = ["coverage"]
 # maintainers, and where to support the project financially. The key is
 # what's used to render the link text on PyPI.
 [project.urls]
-"Homepage" = "https://github.com/pypa/sampleproject"
-"Bug Reports" = "https://github.com/pypa/sampleproject/issues"
+"Homepage" = "https://github.com/jamesrosssharp/loadspice"
+"Bug Reports" = "https://github.com/jamesrosssharp/loadspice/issues"
 "Funding" = "https://donate.pypi.org"
 "Say Thanks!" = "http://saythanks.io/to/example"
-"Source" = "https://github.com/pypa/sampleproject/"
+"Source" = "https://github.com/jamesrosssharp/loadspice/"
 
 # The following would provide a command line executable called `sample`
 # which executes the function `main` from this package when invoked.
@@ -159,4 +159,4 @@ sample = "sample:main"
 [tool.setuptools]
 # If there are data files included in your packages that need to be
 # installed, specify them here.
-package-data = { "sample" = ["*.dat"] }
+#package-data = { "sample" = ["*.dat"] }
