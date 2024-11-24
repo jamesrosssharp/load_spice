@@ -25,6 +25,15 @@ import numpy as np
 #   Binary:
 #   <binary data blob>
 
+#   Dictionary format:
+#
+#{  
+#   'plot_name': 'AC Analysis', 
+#   'num_vars': 39, 
+#   'num_points': 101, 
+#   'vars': [['0', 'frequency', 'frequency grid=3'], ...], 
+#   'data': {'frequency': array([1.00000000e+00+0.j, ...])}
+# }
 #
 
 def load_spice(raw_file_path):
@@ -35,6 +44,7 @@ def load_spice(raw_file_path):
         num_points = 0
         num_vars   = 0
         plot_name  = ""
+        flags = ""
         var_names = []
         while l != b'':
  
@@ -45,7 +55,8 @@ def load_spice(raw_file_path):
                 pattern = (
                         r"Plotname:\s*(?P<plotname>\w.*\w)\s*|"
                         r"No\. Variables:\s*(?P<no_vars>\d+)\s*|"
-                        r"No\. Points:\s*(?P<no_points>\d+)\s*"
+                        r"No\. Points:\s*(?P<no_points>\d+)\s*|"
+                        r"Flags:\s*(?P<flags>.*)\s*"
                     )
                 m = re.search(pattern, s)
                
@@ -60,7 +71,9 @@ def load_spice(raw_file_path):
 
                     if m.groupdict()['plotname'] is not None:
                         plot_name = m.groupdict()['plotname']
-
+            
+                    if m.groupdict()['flags'] is not None:
+                        flags = m.groupdict()['flags']
 
                 if re.match(r"Variables:\s*", s) is not None:
                     var_names = []
@@ -72,15 +85,27 @@ def load_spice(raw_file_path):
 
                     dat = {}
 
-                    for v in var_names:
-                        dat[v[1]] = np.zeros(num_points)
-
                     # Struct unpack the points
-                    for i in range(0, num_points):
-                        raw_data = f.read(num_vars*8)
-                        dat_list = (struct.unpack("d"*num_vars, raw_data)) 
-                        for j, v in enumerate(var_names):
-                            dat[v[1]][i] = dat_list[j]
+                    if flags == "complex":
+                        for v in var_names:
+                            dat[v[1]] = np.zeros(num_points, dtype=complex)
+
+                        for i in range(0, num_points):
+                            raw_data = f.read(num_vars*16)
+                            dat_list = (struct.unpack("d"*num_vars*2, raw_data)) 
+                            for j, v in enumerate(var_names):
+                                dat[v[1]][i] = dat_list[j*2] + 1j*dat_list[j*2+1]
+
+                    elif flags == "real":
+
+                        for v in var_names:
+                            dat[v[1]] = np.zeros(num_points)
+
+                        for i in range(0, num_points):
+                            raw_data = f.read(num_vars*8)
+                            dat_list = (struct.unpack("d"*num_vars, raw_data)) 
+                            for j, v in enumerate(var_names):
+                                dat[v[1]][i] = dat_list[j]
 
 
                     plots.append({"plot_name": plot_name, "num_vars": num_vars, "num_points": num_points, "vars": var_names, "data": dat})
